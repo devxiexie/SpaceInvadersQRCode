@@ -1,0 +1,12 @@
+<!DOCTYPE html><html lang="en"><head><title>Space Invaders</title></head><body><canvas id="gcv"></canvas><script>const cv=document.getElementById("gcv");const ctx=cv.getContext("2d");cv.width=400;cv.height=600;const p={x:175,y:550,width:30,height:20,spd:10};const blts=[];const emys=[];let emyspd=0.5;const bltspd=5;let gRunning=!0;function iniemys(){emyspd=emyspd*1.1;emys.length=0;for(let i=0;i<5;i++){for(let j=0;j<3;j++){emys.push({x:i*70+30,y:j*50+20,width:30,height:20,})}}}
+iniemys();function drawp(){ctx.fillRect(p.x,p.y,p.width,p.height)};let ss=0;
+function drawblts(){blts.forEach((blt)=>ctx.fillRect(blt.x,blt.y,blt.width,blt.height))}
+function drawemys(){emys.forEach((emy)=>ctx.fillRect(emy.x,emy.y,emy.width,emy.height))}
+function upblts(){blts.forEach((blt,dx)=>{blt.y-=bltspd;if(blt.y+blt.height<0)blts.splice(dx,1);})}
+function upemys(){emys.forEach((emy)=>{emy.y+=emyspd;if(emy.y+emy.height>cv.height)gRunning=!1})}
+function checkCollisions(){blts.forEach((blt,bdx)=>{emys.forEach((emy,edx)=>{if(blt.x<emy.x+emy.width&&blt.x+blt.width>emy.x&&blt.y<emy.y+emy.height&&blt.y+blt.height>emy.y){blts.splice(bdx,1);emys.splice(edx,1);ss+=1;}})})}
+document.addEventListener("keydown",(event)=>{if(event.key==="ArrowLeft")p.x=Math.max(p.x-p.spd,0);if(event.key==="ArrowRight")
+p.x=Math.min(p.x+p.spd,cv.width-p.width);if(event.key===" ")
+blts.push({x:p.x+p.width/2-2.5,y:p.y,width:5,height:10,})});function gLoop(){ctx.clearRect(0,0,cv.width,cv.height);if(gRunning){drawp();drawblts();drawemys();upblts();upemys();checkCollisions();if(emys.length===0){iniemys()}
+requestAnimationFrame(gLoop)}else{ctx.font="30px Arial";ctx.fillText("Game Over! Score: "+ss,50,300)}}
+gLoop()</script></body></html>
